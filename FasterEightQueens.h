@@ -1,12 +1,12 @@
-#ifndef EIGHTQUEENS_H
-#define EIGHTQUEENS_H
+#ifndef FASTEREIGHTQUEENS_H
+#define FASTEREIGHTQUEENS_H
 
 //Implementation of the Eight Queens Problem
-class EightQueens
+class FasterEightQueens
 {
     public:
-        EightQueens ();
-        virtual ~EightQueens ();
+        FasterEightQueens ();
+        virtual ~FasterEightQueens ();
         void ConstructBoard ();
         bool PlaceQueens (int column);
         bool CheckOverlap(int x, int y);
@@ -16,7 +16,6 @@ class EightQueens
         int ** chessBoard;
         const int sideSize;
         int checkOverlapComparisons = 0;
-        int numberOfLoops = 0;
 };
 
-#endif // EIGHTQUEENS_H
+#endif // FASTEREIGHTQUEENS_H

@@ -1,9 +1,9 @@
-#include "EightQueens.h"
+#include "FasterEightQueens.h"
 #include <iostream>
 #include <stdexcept>
 #include <cmath> //std::abs
 //Initialize the board
-EightQueens::EightQueens() : sideSize (8){
+FasterEightQueens::FasterEightQueens() : sideSize (8){
     chessBoard = new int * [sideSize];
     for (int i = 0; i < sideSize; ++i) {
         chessBoard[i] = new int [sideSize];
@@ -16,7 +16,7 @@ EightQueens::EightQueens() : sideSize (8){
     }
 }
 //Deallocate the memory in the destructor
-EightQueens::~EightQueens()
+FasterEightQueens::~FasterEightQueens()
 {
     for (int i = 0; i < sideSize; ++i) {
         for (int j = 0; j < sideSize; ++j) {
@@ -26,12 +26,13 @@ EightQueens::~EightQueens()
     delete [] chessBoard;
 }
 //Construct the board through the initial calling
-void EightQueens::ConstructBoard () {
-    if (!PlaceQueens(0))
-        throw std::runtime_error ("Board does not exist. ");
+void FasterEightQueens::ConstructBoard () {
+   // if (!PlaceQueens(0))
+      //  throw std::runtime_error ("Board does not exist. ");
+      PlaceQueens(0);
 }
 //Use backtracking when placing queens per column
-bool EightQueens::PlaceQueens (int column) {
+bool FasterEightQueens::PlaceQueens (int column) {
     //If all the queens have been placed
     if (column >= sideSize)
         return true;
@@ -49,28 +50,27 @@ bool EightQueens::PlaceQueens (int column) {
     return false;
 }
 //Check if there is a checkmate between the queens
-bool EightQueens::CheckOverlap (int x, int y) {
-    //Check rows and columns
-    for (int i = 0; i < sideSize; ++i) {
-        for (int j = 0; j < sideSize; ++j) {
-            ++numberOfLoops;
-            //Check if overlapping another queen horizontally
-            ++checkOverlapComparisons;
-            if (i == x && chessBoard[i][j]) return true;
-
-            //Check if overlapping another queen vertically
-            ++checkOverlapComparisons;
-            if (j == y && chessBoard[i][j]) return true;
-
-            //Check diagonals, there is a correlation between the row and columns abs values
-            ++checkOverlapComparisons;
-            if (abs(x - i) == abs(j - y) && chessBoard[i][j]) return true;
-        }
+bool FasterEightQueens::CheckOverlap (int x, int y) {
+    //Check if a queen intercepts the newly inputted queen
+    //Check the rows, going backwards from the current column
+    for (int i = y; i >= 0; --i) {
+        ++checkOverlapComparisons;
+        if (chessBoard[x][i]) return true;
+    }
+    //Check the upper right diagonals
+    for (int i = x, j = y; i >= 0 && j >= 0; --i, --j) {
+        ++checkOverlapComparisons;
+        if (chessBoard[i][j]) return true;
+    }
+    //Check the lower right diagonals
+    for (int i = x, j = y; i < sideSize && j >= 0; ++i,  --j) {
+        ++checkOverlapComparisons;
+        if (chessBoard[i][j]) return true;
     }
     return false;
 }
 //Print the chess board
-void EightQueens::PrintBoard () {
+void FasterEightQueens::PrintBoard () {
     int counter = 0;
     for (int i = 0; i < sideSize; ++i) {
         for (int j = 0; j < sideSize; ++j) {
@@ -81,7 +81,6 @@ void EightQueens::PrintBoard () {
             ++counter;
         }
     }
-    std::cout << "\nNumber of Loops when Comparing: " << numberOfLoops << std::endl;
     std::cout << "Number of Compares: " << checkOverlapComparisons << std::endl;
 
 }
